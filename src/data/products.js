@@ -8,7 +8,7 @@ export const products = [
       color: "কালো",
       wholesalePrice: 400,
       sellPrice: 550,
-      image: "/images/rack-a.jpg",
+      image:["/images/rack-a.jpg"],
       stockStatus: "in",
       gallery: ["/images/rack1.jpg", "/images/rack2.jpg"]
     },
@@ -22,7 +22,7 @@ export const products = [
       wholesalePrice: 695,
       sellPrice: 850,
       stockStatus: "in",
-      image: "/images/cycle-451.jpg",
+      image: ["/images/cycle-451.jpg"],
       gallery: ["/images/c1.jpg", "/images/c2.jpg"]
     }
   ];

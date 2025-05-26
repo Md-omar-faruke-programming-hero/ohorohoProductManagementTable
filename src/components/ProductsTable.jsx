@@ -59,12 +59,12 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
               const color = p.color || "—";
               const wholesalePrice = p.wholesalePrice || p.wholeSellPrice || "—";
               const sellPrice = p.sellPrice || "—";
-              const image = p.image || p.featuredImage || "";
+              const image = p.image || p.featuredImages || "";
               const gallery = p.gallery || p.galleryImages || [];
-
+              console.log(image.length, "hello");
               return (
                 <tr key={index} className="border-t text-sm">
-                  <td className="p-2 border">{index+1}</td>
+                  <td className="p-2 border">{index + 1}</td>
                   <td className="p-2 border">{name}</td>
                   <td className="p-2 border">{category}</td>
                   <td
@@ -86,23 +86,38 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
                     )}
                   </td>
                   <td className="p-2 border">
-                    {image ? (
-                      <img src={image} alt={name} className="h-10 w-10 object-cover rounded" />
-                    ) : (
-                      <span className="text-gray-400 italic">No image</span>
-                    )}
+                    <div className="flex flex-wrap gap-1">
+                      {image && image.length > 0 ? (
+                        image.map((url, i) =>
+                          typeof url === "string" ? (
+                            <img
+                              key={i}
+                              src={url}
+                              alt={`image ${i}`}
+                              className="h-10 w-10 object-cover rounded"
+                            />
+                          ) : null
+                        )
+                      ) : (
+                        <span className="text-gray-400 italic">No image</span>
+                      )}
+                    </div>
                   </td>
                   <td className="p-2 border">
                     <div className="flex flex-wrap gap-1">
-                      {(gallery || []).map((url, i) =>
-                        typeof url === "string" ? (
-                          <img
-                            key={i}
-                            src={url}
-                            alt={`Gallery ${i}`}
-                            className="h-10 w-10 object-cover rounded"
-                          />
-                        ) : null
+                      {gallery && gallery.length > 0 ? (
+                        gallery.map((url, i) =>
+                          typeof url === "string" ? (
+                            <img
+                              key={i}
+                              src={url}
+                              alt={`gallery ${i}`}
+                              className="h-10 w-10 object-cover rounded"
+                            />
+                          ) : null
+                        )
+                      ) : (
+                        <span className="text-gray-400 italic">No image</span>
                       )}
                     </div>
                   </td>

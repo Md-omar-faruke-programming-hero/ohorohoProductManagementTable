@@ -7,7 +7,7 @@ function App() {
   const [products, setProducts] = useState(initialProducts);
   const [showFormModal, setShowFormModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
+console.log(products)
   const addProduct = (product) => {
     setProducts([...products, product]);
   };
@@ -125,7 +125,7 @@ function App() {
       </div>
 
       <div className="p-4 sm:p-6 md:p-8 container  mx-auto">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row items-center justify-between">
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 text-center md:text-left">
             Product Management
           </h1>
