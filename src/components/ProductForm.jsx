@@ -32,9 +32,9 @@ export default function ProductForm({ onAdd }) {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Upload all featured images and gallery images
+  e.preventDefault();
+  try {
+    // Upload images
     const featuredImageUrls = await Promise.all(
       product.featuredImages.map((file) => uploadToImageBB(file))
     );
@@ -48,9 +48,22 @@ export default function ProductForm({ onAdd }) {
       galleryImages: galleryUrls,
     };
 
-    onAdd(finalProduct);
+    // POST product to backend
+    const response = await fetch("http://localhost:5000/add/products", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(finalProduct),
+    });
 
-    // Reset form state
+    if (!response.ok) {
+      throw new Error("Failed to add product");
+    }
+
+    const data = await response.json();
+
+    onAdd(data);
+
+    // Reset form
     setProduct({
       productName: "",
       category: "",
@@ -65,10 +78,15 @@ export default function ProductForm({ onAdd }) {
       stockStatus: "in",
     });
 
-    // Reset file inputs via refs
     if (featuredInputRef.current) featuredInputRef.current.value = null;
     if (galleryInputRef.current) galleryInputRef.current.value = null;
-  };
+
+  } catch (error) {
+    console.error(error);
+    alert("Error adding product. Please try again.");
+  }
+};
+
 
   return (
     <form

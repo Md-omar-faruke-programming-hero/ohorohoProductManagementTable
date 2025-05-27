@@ -51,17 +51,17 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
           </thead>
           <tbody>
             {products.map((p, index) => {
-              const name = p.name || p.productName || "—";
+              const name = p.productName || "—";
               const category = p.category || "—";
               const description = p.description || "—";
-              const model = p.model || p.variantOrModel || "—";
+              const model = p.variantOrModel || "—";
               const size = p.size || "—";
               const color = p.color || "—";
-              const wholesalePrice = p.wholesalePrice || p.wholeSellPrice || "—";
+              const wholesalePrice = p.wholeSellPrice || "—";
               const sellPrice = p.sellPrice || "—";
-              const image = p.image || p.featuredImages || "";
-              const gallery = p.gallery || p.galleryImages || [];
-              console.log(image.length, "hello");
+              const image = p.featuredImages || "";
+              const gallery = p.galleryImages || [];
+
               return (
                 <tr key={index} className="border-t text-sm">
                   <td className="p-2 border">{index + 1}</td>
