@@ -1,46 +1,94 @@
-import { useState } from "react";
-import { products as initialProducts } from "./data/products";
+import { useEffect, useState } from "react";
+
+import axios from "axios";
 import ProductForm from "./components/ProductForm";
 import ProductTable from "./components/ProductsTable";
 
 function App() {
-  const [products, setProducts] = useState(initialProducts);
+  const [products, setProducts] = useState([]);
   const [showFormModal, setShowFormModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-console.log(products)
-  const addProduct = (product) => {
-    setProducts([...products, product]);
+  //const [loading, setLoading] = useState(true);
+  //const [error, setError] = useState("");
+
+  // Fetch products from backend
+  const fetchProducts = async () => {
+    try {
+      //setLoading(true);
+      const res = await axios.get("http://localhost:5000/products");
+      setProducts(res.data);
+      // setError("");
+    } catch (err) {
+      console.error(err);
+      //setError("Failed to fetch products");
+    } finally {
+      // setLoading(false);
+    }
   };
 
-  const deleteProduct = (index) => {
-    setProducts(products.filter((_, i) => i !== index));
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+  // add product
+  const addProduct = async (product) => {
+    try {
+      const res = await axios.post("http://localhost:5000/add/products", product);
+      setProducts([...products, res.data]);
+      console.log(res);
+      fetchProducts();
+      if (res.status == "201") {
+        setShowFormModal(false);
+      }
+    } catch (err) {
+      console.error("Error adding product:", err);
+    }
   };
-
-  const editProduct = (index, updatedProduct) => {
-    const updatedProducts = [...products];
-    updatedProducts[index] = updatedProduct;
-    setProducts(updatedProducts);
+  // delete product
+  const deleteProduct = async (index) => {
+    const productToDelete = products[index];
+    console.log(productToDelete._id, "delete index");
+    try {
+      await axios.delete(`http://localhost:5000/products/${productToDelete._id}`);
+      setProducts(products.filter((_, i) => i !== index));
+    } catch (err) {
+      console.error("Error deleting product:", err);
+    }
   };
+  // edit product
 
+  const editProduct = async (index, updatedProduct) => {
+    try {
+      const id = products[index]._id;
+
+      // Make a copy and remove _id
+      const { _id, ...productWithoutId } = updatedProduct;
+
+      await axios.put(`http://localhost:5000/products/${id}`, productWithoutId);
+
+      // Refetch all products after update
+      fetchProducts();
+    } catch (err) {
+      console.error("Error updating product:", err);
+    }
+  };
   const filteredProducts = products.filter((product) => {
     const query = searchQuery.trim().toLowerCase();
     if (!query) return true; // show all if search is empty
-  
+
     const productName = product.productName?.toLowerCase() || "";
     const category = product.category?.toLowerCase() || "";
     const description = product.description?.toLowerCase() || "";
     const variantOrModel = product.variantOrModel?.toLowerCase() || "";
     const color = product.color?.toLowerCase() || "";
-  
+
     const combinedText = `${productName} ${category} ${description} ${variantOrModel} ${color}`;
-  
+
     // Split the search query by spaces into individual words
     const queryWords = query.split(/\s+/);
-  
+
     // Check if every word in the query is included in combinedText
-    return queryWords.every(word => combinedText.includes(word));
+    return queryWords.every((word) => combinedText.includes(word));
   });
-  
 
   return (
     <>

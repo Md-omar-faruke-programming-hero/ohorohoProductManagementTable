@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
 import { uploadToImageBB } from "../utils/imageBBUploader";
-
 export default function ProductForm({ onAdd }) {
   const [product, setProduct] = useState({
     productName: "",
@@ -48,20 +47,9 @@ export default function ProductForm({ onAdd }) {
       galleryImages: galleryUrls,
     };
 
-    // POST product to backend
-    const response = await fetch("http://localhost:5000/add/products", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(finalProduct),
-    });
+    
 
-    if (!response.ok) {
-      throw new Error("Failed to add product");
-    }
-
-    const data = await response.json();
-
-    onAdd(data);
+    onAdd(finalProduct);
 
     // Reset form
     setProduct({

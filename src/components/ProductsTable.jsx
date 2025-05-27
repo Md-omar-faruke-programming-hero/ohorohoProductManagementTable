@@ -51,16 +51,16 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
           </thead>
           <tbody>
             {products.map((p, index) => {
-              const name = p.productName || "—";
-              const category = p.category || "—";
-              const description = p.description || "—";
-              const model = p.variantOrModel || "—";
-              const size = p.size || "—";
-              const color = p.color || "—";
-              const wholesalePrice = p.wholeSellPrice || "—";
-              const sellPrice = p.sellPrice || "—";
-              const image = p.featuredImages || "";
-              const gallery = p.galleryImages || [];
+              const name = p?.productName || "—";
+              const category = p?.category || "—";
+              const description = p?.description || "—";
+              const model = p?.variantOrModel || "—";
+              const size = p?.size || "—";
+              const color = p?.color || "—";
+              const wholesalePrice = p?.wholeSellPrice || "—";
+              const sellPrice = p?.sellPrice || "—";
+              const image = p?.featuredImages || "";
+              const gallery = p?.galleryImages || [];
 
               return (
                 <tr key={index} className="border-t text-sm">
@@ -177,13 +177,13 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
             <h3 className="text-lg font-bold mb-4">Edit Product</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
-                "name",
+                "productName",
                 "category",
                 "description",
-                "model",
+                "variantOrModel",
                 "size",
                 "color",
-                "wholesalePrice",
+                "wholeSellPrice",
                 "sellPrice",
               ].map((field) => (
                 <div key={field}>
