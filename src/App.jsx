@@ -15,7 +15,7 @@ function App() {
   const fetchProducts = async () => {
     try {
       //setLoading(true);
-      const res = await axios.get("http://localhost:5000/products");
+      const res = await axios.get("https://productmanageserver.vercel.app/products");
       setProducts(res.data);
       // setError("");
     } catch (err) {
@@ -32,7 +32,7 @@ function App() {
   // add product
   const addProduct = async (product) => {
     try {
-      const res = await axios.post("http://localhost:5000/add/products", product);
+      const res = await axios.post("https://productmanageserver.vercel.app/add/products", product);
       setProducts([...products, res.data]);
       console.log(res);
       fetchProducts();
@@ -48,7 +48,7 @@ function App() {
     const productToDelete = products[index];
     console.log(productToDelete._id, "delete index");
     try {
-      await axios.delete(`http://localhost:5000/products/${productToDelete._id}`);
+      await axios.delete(`https://productmanageserver.vercel.app/products/${productToDelete._id}`);
       setProducts(products.filter((_, i) => i !== index));
     } catch (err) {
       console.error("Error deleting product:", err);
@@ -63,7 +63,7 @@ function App() {
       // Make a copy and remove _id
       const { _id, ...productWithoutId } = updatedProduct;
 
-      await axios.put(`http://localhost:5000/products/${id}`, productWithoutId);
+      await axios.put(`https://productmanageserver.vercel.app/products/${id}`, productWithoutId);
 
       // Refetch all products after update
       fetchProducts();
