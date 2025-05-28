@@ -83,9 +83,9 @@ function App() {
     const category = product.category?.toLowerCase() || "";
     const description = product.description?.toLowerCase() || "";
     const variantOrModel = product.variantOrModel?.toLowerCase() || "";
-    const color = product.color?.toLowerCase() || "";
+    
 
-    const combinedText = `${productName} ${category} ${description} ${variantOrModel} ${color}`;
+    const combinedText = `${productName} ${category} ${description} ${variantOrModel} `;
 
     // Split the search query by spaces into individual words
     const queryWords = query.split(/\s+/);

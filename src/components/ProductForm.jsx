@@ -6,17 +6,19 @@ export default function ProductForm({ onAdd, loading }) {
     category: "",
     description: "",
     variantOrModel: "",
-    size: "",
+    sizes: [],
     color: [],
     wholeSellPrice: "",
     sellPrice: "",
     featuredImages: [],
     galleryImages: [],
     stockStatus: "in",
+  });
+  const [customColor, setCustomColor] = useState("");
+  const [currentSize, setCurrentSize] = useState({
     sizeType: "",
     customSize: "",
   });
-  const [customColor, setCustomColor] = useState("");
   // Refs for file inputs
   const featuredInputRef = useRef(null);
   const galleryInputRef = useRef(null);
@@ -58,7 +60,8 @@ export default function ProductForm({ onAdd, loading }) {
         category: "",
         description: "",
         variantOrModel: "",
-        size: "",
+
+        sizes: [],
 
         color: [],
         wholeSellPrice: "",
@@ -66,8 +69,6 @@ export default function ProductForm({ onAdd, loading }) {
         featuredImages: [],
         galleryImages: [],
         stockStatus: "in",
-        sizeType: "",
-        customSize: "",
       });
 
       if (featuredInputRef.current) featuredInputRef.current.value = null;
@@ -153,49 +154,53 @@ export default function ProductForm({ onAdd, loading }) {
         {/* Size */}
 
         <div className="md:col-span-2">
-          <label className="block text-gray-700 font-medium mb-1" htmlFor="sizeType">
-            Size
-          </label>
+          <label className="block text-gray-700 font-medium mb-1">Size</label>
           <select
-            id="sizeType"
-            name="sizeType"
-            onChange={(e) =>
-              setProduct((prev) => ({
-                ...prev,
-                sizeType: e.target.value,
-              }))
-            }
-            value={product.sizeType || ""}
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={currentSize.sizeType}
+            onChange={(e) => setCurrentSize((prev) => ({ ...prev, sizeType: e.target.value }))}
+            className="w-full border border-gray-300 rounded-md p-2 mb-2"
           >
             <option value="">-- Choose Size --</option>
             <option value="বড়">বড়</option>
             <option value="মাঝারি">মাঝারি</option>
             <option value="ছোট">ছোট</option>
           </select>
-        </div>
 
-        <div className="md:col-span-2">
-          <label className="block text-gray-700 font-medium mb-1" htmlFor="customSize">
-            Custom Dimension
-          </label>
           <input
-            id="customSize"
-            name="customSize"
+            type="text"
             placeholder='উদাহরণ: ১৬" x ৫" x ৭"'
-            onChange={(e) =>
-              setProduct((prev) => ({
-                ...prev,
-                customSize: e.target.value,
-              }))
-            }
-            value={product.customSize || ""}
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={currentSize.customSize}
+            onChange={(e) => setCurrentSize((prev) => ({ ...prev, customSize: e.target.value }))}
+            className="w-full border border-gray-300 rounded-md p-2 mb-2"
           />
+
+          <button
+            type="button"
+            onClick={() => {
+              if (currentSize.sizeType && currentSize.customSize) {
+                setProduct((prev) => ({
+                  ...prev,
+                  sizes: [...prev.sizes, currentSize],
+                }));
+                setCurrentSize({ sizeType: "", customSize: "" });
+                console.log(product.sizes);
+              }
+            }}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Add Size
+          </button>
+          <div className="mt-2">
+            {product.sizes.map((size, index) => (
+              <div key={index} className="text-sm text-gray-700">
+                {size.sizeType} - {size.customSize}
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Color */}
-        
+
         <div className="md:col-span-2">
           <label className="block text-gray-700 font-medium mb-1">রঙ নির্বাচন করুন</label>
 
