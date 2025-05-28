@@ -37,7 +37,7 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
               <th className="p-2 border">Name</th>
               <th className="p-2 border">Category</th>
               <th className="p-2 border">Description</th>
-              <th className="p-2 border">Model</th>
+              <th className="p-2 border">Variant / Model</th>
               <th className="p-2 border">Size</th>
               <th className="p-2 border">Color</th>
               <th className="p-2 border">Wholesale Price</th>
@@ -56,10 +56,10 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
               const description = p?.description || "—";
               const model = p?.variantOrModel || "—";
               const size = p?.size || "—";
-              const color = p?.color || "—";
+              const color = p?.color || [];
               const wholesalePrice = p?.wholeSellPrice || "—";
               const sellPrice = p?.sellPrice || "—";
-              const image = p?.featuredImages || "";
+              const image = p?.featuredImages || [];
               const gallery = p?.galleryImages || [];
 
               return (
@@ -75,7 +75,11 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
                   </td>
                   <td className="p-2 border">{model}</td>
                   <td className="p-2 border">{size}</td>
-                  <td className="p-2 border">{color}</td>
+
+                  <td className="p-2 border">
+                    {Array.isArray(color) ? color.join(", ") : color || "—"}
+                  </td>
+
                   <td className="p-2 border">{wholesalePrice}৳</td>
                   <td className="p-2 border">{sellPrice}৳</td>
                   <td className="p-2 border text-center">

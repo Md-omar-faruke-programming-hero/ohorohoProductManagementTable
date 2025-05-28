@@ -1,20 +1,22 @@
 import { useState, useRef } from "react";
 import { uploadToImageBB } from "../utils/imageBBUploader";
-export default function ProductForm({ onAdd }) {
+export default function ProductForm({ onAdd, loading }) {
   const [product, setProduct] = useState({
     productName: "",
     category: "",
     description: "",
     variantOrModel: "",
     size: "",
-    color: "",
+    color: [],
     wholeSellPrice: "",
     sellPrice: "",
-    featuredImages: [], // multiple featured images now
+    featuredImages: [],
     galleryImages: [],
     stockStatus: "in",
+    sizeType: "",
+    customSize: "",
   });
-
+  const [customColor, setCustomColor] = useState("");
   // Refs for file inputs
   const featuredInputRef = useRef(null);
   const galleryInputRef = useRef(null);
@@ -31,50 +33,50 @@ export default function ProductForm({ onAdd }) {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    // Upload images
-    const featuredImageUrls = await Promise.all(
-      product.featuredImages.map((file) => uploadToImageBB(file))
-    );
-    const galleryUrls = await Promise.all(
-      product.galleryImages.map((file) => uploadToImageBB(file))
-    );
+    e.preventDefault();
+    try {
+      // Upload images
+      const featuredImageUrls = await Promise.all(
+        product.featuredImages.map((file) => uploadToImageBB(file))
+      );
+      const galleryUrls = await Promise.all(
+        product.galleryImages.map((file) => uploadToImageBB(file))
+      );
 
-    const finalProduct = {
-      ...product,
-      featuredImages: featuredImageUrls,
-      galleryImages: galleryUrls,
-    };
+      const finalProduct = {
+        ...product,
+        featuredImages: featuredImageUrls,
+        galleryImages: galleryUrls,
+        size: `${product.sizeType} - ${product.customSize}`,
+      };
 
-    
+      onAdd(finalProduct);
 
-    onAdd(finalProduct);
+      // Reset form
+      setProduct({
+        productName: "",
+        category: "",
+        description: "",
+        variantOrModel: "",
+        size: "",
 
-    // Reset form
-    setProduct({
-      productName: "",
-      category: "",
-      description: "",
-      variantOrModel: "",
-      size: "",
-      color: "",
-      wholeSellPrice: "",
-      sellPrice: "",
-      featuredImages: [],
-      galleryImages: [],
-      stockStatus: "in",
-    });
+        color: [],
+        wholeSellPrice: "",
+        sellPrice: "",
+        featuredImages: [],
+        galleryImages: [],
+        stockStatus: "in",
+        sizeType: "",
+        customSize: "",
+      });
 
-    if (featuredInputRef.current) featuredInputRef.current.value = null;
-    if (galleryInputRef.current) galleryInputRef.current.value = null;
-
-  } catch (error) {
-    console.error(error);
-    alert("Error adding product. Please try again.");
-  }
-};
-
+      if (featuredInputRef.current) featuredInputRef.current.value = null;
+      if (galleryInputRef.current) galleryInputRef.current.value = null;
+    } catch (error) {
+      console.error(error);
+      alert("Error adding product. Please try again.");
+    }
+  };
 
   return (
     <form
@@ -134,9 +136,9 @@ export default function ProductForm({ onAdd }) {
         </div>
 
         {/* Variant/Model */}
-        <div>
+        <div className="md:col-span-2">
           <label className="block text-gray-700 font-medium mb-1" htmlFor="variantOrModel">
-            ভ্যারিয়েন্ট/মডেল
+            Variant Or Model
           </label>
           <input
             id="variantOrModel"
@@ -149,33 +151,107 @@ export default function ProductForm({ onAdd }) {
         </div>
 
         {/* Size */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1" htmlFor="size">
-            মাপ
+
+        <div className="md:col-span-2">
+          <label className="block text-gray-700 font-medium mb-1" htmlFor="sizeType">
+            Size
+          </label>
+          <select
+            id="sizeType"
+            name="sizeType"
+            onChange={(e) =>
+              setProduct((prev) => ({
+                ...prev,
+                sizeType: e.target.value,
+              }))
+            }
+            value={product.sizeType || ""}
+            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            <option value="">-- Choose Size --</option>
+            <option value="বড়">বড়</option>
+            <option value="মাঝারি">মাঝারি</option>
+            <option value="ছোট">ছোট</option>
+          </select>
+        </div>
+
+        <div className="md:col-span-2">
+          <label className="block text-gray-700 font-medium mb-1" htmlFor="customSize">
+            Custom Dimension
           </label>
           <input
-            id="size"
-            name="size"
-            placeholder="মাপ"
-            onChange={handleChange}
-            value={product.size}
+            id="customSize"
+            name="customSize"
+            placeholder='উদাহরণ: ১৬" x ৫" x ৭"'
+            onChange={(e) =>
+              setProduct((prev) => ({
+                ...prev,
+                customSize: e.target.value,
+              }))
+            }
+            value={product.customSize || ""}
             className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
         {/* Color */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1" htmlFor="color">
-            রঙ
-          </label>
-          <input
-            id="color"
-            name="color"
-            placeholder="রঙ"
-            onChange={handleChange}
-            value={product.color}
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
+        
+        <div className="md:col-span-2">
+          <label className="block text-gray-700 font-medium mb-1">রঙ নির্বাচন করুন</label>
+
+          {/* Predefined Color Options as Checkboxes */}
+          <div className="flex flex-wrap gap-2 mb-3">
+            {["লাল", "নীল", "সবুজ", "কালো", "সাদা"].map((colorOption) => (
+              <label key={colorOption} className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  value={colorOption}
+                  checked={product.color?.includes(colorOption)}
+                  onChange={(e) => {
+                    const { checked, value } = e.target;
+                    setProduct((prev) => {
+                      const updatedColors = checked
+                        ? [...(prev.color || []), value]
+                        : prev.color.filter((c) => c !== value);
+                      return { ...prev, color: updatedColors };
+                    });
+                  }}
+                />
+                <span>{colorOption}</span>
+              </label>
+            ))}
+          </div>
+
+          {/* Optional Custom Color Input */}
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              placeholder="কাস্টম রঙ লিখুন (যেমনঃ সোনালী)"
+              className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+              value={customColor || ""}
+              onChange={(e) => setCustomColor(e.target.value)}
+            />
+            <button
+              type="button"
+              className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+              onClick={() => {
+                if (customColor && !product.color?.includes(customColor)) {
+                  setProduct((prev) => ({
+                    ...prev,
+                    color: [...(prev.color || []), customColor],
+                  }));
+                  setCustomColor("");
+                }
+              }}
+            >
+              যোগ করুন
+            </button>
+          </div>
+
+          {/* Display Selected Colors */}
+          <div className="mt-2 text-sm text-gray-600">
+            নির্বাচিত রঙ: {product.color?.join(", ") || "কোনো রঙ নির্বাচন করা হয়নি"}
+          </div>
         </div>
 
         {/* Wholesale Price */}
@@ -184,12 +260,13 @@ export default function ProductForm({ onAdd }) {
             Wholesale Price
           </label>
           <input
+            type="number"
             id="wholeSellPrice"
             name="wholeSellPrice"
             placeholder="Wholesale Price"
             onChange={handleChange}
             value={product.wholeSellPrice}
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>
 
@@ -200,16 +277,17 @@ export default function ProductForm({ onAdd }) {
           </label>
           <input
             id="sellPrice"
+            type="number"
             name="sellPrice"
             placeholder="Sell Price"
             onChange={handleChange}
             value={product.sellPrice}
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>
 
         {/* Stock Status */}
-        <div>
+        <div className="md:col-span-2">
           <label className="block text-gray-700 font-medium mb-1" htmlFor="stockStatus">
             Stock Status
           </label>
@@ -308,13 +386,21 @@ export default function ProductForm({ onAdd }) {
           </div>
         )}
       </div>
-
-      <button
-        type="submit"
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded transition"
-      >
-        Add Product
-      </button>
+      {loading ? (
+        <button
+          type="submit"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded transition"
+        >
+          <span className="loading loading-dots loading-xl"></span>
+        </button>
+      ) : (
+        <button
+          type="submit"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded transition"
+        >
+          Add Product
+        </button>
+      )}
     </form>
   );
 }

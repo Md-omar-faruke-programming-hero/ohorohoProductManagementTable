@@ -8,7 +8,7 @@ function App() {
   const [products, setProducts] = useState([]);
   const [showFormModal, setShowFormModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  //const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   //const [error, setError] = useState("");
 
   // Fetch products from backend
@@ -32,15 +32,19 @@ function App() {
   // add product
   const addProduct = async (product) => {
     try {
+      setLoading(true);
       const res = await axios.post("https://productmanageserver.vercel.app/add/products", product);
       setProducts([...products, res.data]);
       console.log(res);
       fetchProducts();
       if (res.status == "201") {
         setShowFormModal(false);
+        setLoading(false);
       }
     } catch (err) {
       console.error("Error adding product:", err);
+      setShowFormModal(false);
+      setLoading(false);
     }
   };
   // delete product
@@ -207,7 +211,7 @@ function App() {
               </button>
 
               <h3 className="text-lg font-bold mb-4 text-center sm:text-left">Add Product</h3>
-              <ProductForm onAdd={addProduct} onCancel={() => setShowFormModal(false)} />
+              <ProductForm loading={loading} onAdd={addProduct} onCancel={() => setShowFormModal(false)} />
             </div>
           </div>
         )}
