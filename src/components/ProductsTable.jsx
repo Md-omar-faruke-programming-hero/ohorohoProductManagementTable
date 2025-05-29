@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AiFillCloseCircle } from "react-icons/ai";
+import { toast } from "react-toastify";
 
 export default function ProductTable({ products = [], onDelete, onEdit }) {
   const [modalDescription, setModalDescription] = useState(null);
@@ -7,6 +8,7 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
   const [editData, setEditData] = useState({});
   const [modalFeatureImage, setModalFeatureImage] = useState(null);
   const [modalGalleryImage, setModalGalleryImage] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   const truncate = (str, n) => (str.length > n ? str.slice(0, n) + "..." : str);
 
@@ -69,6 +71,19 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
       }
     }
   };
+
+  const handleCopyDescription = () => {
+    if (modalDescription) {
+      navigator.clipboard.writeText(modalDescription).then(() => {
+        setCopied(true);
+        setTimeout(() => {
+          setModalDescription(null);
+          setCopied(false);
+        }, 1000);
+        // Reset after 2 seconds
+      });
+    }
+  };
   return (
     <>
       <div className="overflow-x-auto">
@@ -107,17 +122,56 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
               return (
                 <tr key={index} className="border-t text-sm">
                   <td className="p-2 border">{index + 1}</td>
-                  <td className="p-2 border">{name}</td>
-                  <td className="p-2 border">{category}</td>
+                  <td
+                    className="p-2 border"
+                    onClick={() => {
+                      navigator.clipboard.writeText(name).then(() => {
+                        toast.success("Copied!");
+                      });
+                    }}
+                  >
+                    {name}
+                  </td>
+                  <td
+                    className="p-2 border"
+                    onClick={() => {
+                      navigator.clipboard.writeText(category).then(() => {
+                        toast.success("Copied!");
+                      });
+                    }}
+                  >
+                    {category}
+                  </td>
                   <td
                     className="p-2 border  cursor-pointer"
                     onClick={() => setModalDescription(description)}
                   >
                     {truncate(description, 20)}
                   </td>
-                  <td className="p-2 border">{model}</td>
+                  <td
+                    className="p-2 border"
+                    onClick={() => {
+                      navigator.clipboard.writeText(model).then(() => {
+                        toast.success("Copied!");
+                      });
+                    }}
+                  >
+                    {model}
+                  </td>
                   {/* <td className="p-2 border">{size}</td> */}
-                  <td className="p-2 border">
+                  <td
+                    className="p-2 border"
+                    onClick={() => {
+                      if (Array.isArray(size)) {
+                        const textToCopy = size
+                          .map((s) => `${s.sizeType} - ${s.customSize}`)
+                          .join(", ");
+                        navigator.clipboard.writeText(textToCopy).then(() => {
+                          toast.success("Copied!");
+                        });
+                      }
+                    }}
+                  >
                     {Array.isArray(size) &&
                       size.map((size, index) => (
                         <div key={index} className="text-sm text-gray-700">
@@ -126,12 +180,38 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
                       ))}
                   </td>
 
-                  <td className="p-2 border">
+                  <td
+                    className="p-2 border"
+                    onClick={() => {
+                      const textToCopy = Array.isArray(color) ? color.join(", ") : color || "—";
+                      navigator.clipboard.writeText(textToCopy).then(() => {
+                        toast.success("Copied!");
+                      });
+                    }}
+                  >
                     {Array.isArray(color) ? color.join(", ") : color || "—"}
                   </td>
 
-                  <td className="p-2 border">{wholesalePrice}৳</td>
-                  <td className="p-2 border">{sellPrice}৳</td>
+                  <td
+                    className="p-2 border"
+                    onClick={() => {
+                      navigator.clipboard.writeText(wholesalePrice).then(() => {
+                        toast.success("Copied!");
+                      });
+                    }}
+                  >
+                    {wholesalePrice}৳
+                  </td>
+                  <td
+                    className="p-2 border"
+                    onClick={() => {
+                      navigator.clipboard.writeText(sellPrice).then(() => {
+                        toast.success("Copied!");
+                      });
+                    }}
+                  >
+                    {sellPrice}৳
+                  </td>
                   <td className="p-2 border text-center">
                     {p.stockStatus === "in" ? (
                       <span className="text-green-600 font-semibold">Stock In</span>
@@ -210,12 +290,24 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
           >
             <h3 className="text-lg font-bold mb-4">Full Description</h3>
             <p className="text-gray-800">{modalDescription}</p>
-            <button
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-              onClick={() => setModalDescription(null)}
-            >
-              Close
-            </button>
+            <div className="mt-4 flex flex-col sm:flex-row sm:justify-end sm:items-center gap-2 sm:gap-4">
+              <button
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                onClick={() => setModalDescription(null)}
+              >
+                Close
+              </button>
+              <button
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                onClick={handleCopyDescription}
+              >
+                Copy
+              </button>
+
+              {copied && (
+                <span className="text-sm text-green-600 sm:ml-2 sm:mt-0 mt-2">Copied!</span>
+              )}
+            </div>
           </div>
         </div>
       )}

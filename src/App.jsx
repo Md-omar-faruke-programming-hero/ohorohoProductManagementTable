@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ProductForm from "./components/ProductForm";
 import ProductTable from "./components/ProductsTable";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -83,7 +85,6 @@ function App() {
     const category = product.category?.toLowerCase() || "";
     const description = product.description?.toLowerCase() || "";
     const variantOrModel = product.variantOrModel?.toLowerCase() || "";
-    
 
     const combinedText = `${productName} ${category} ${description} ${variantOrModel} `;
 
@@ -96,6 +97,7 @@ function App() {
 
   return (
     <>
+      <ToastContainer position="top-right" autoClose={2000} />
       <div className="navbar bg-base-100 shadow-sm">
         <div className="navbar-start">
           <div className="dropdown">
@@ -211,7 +213,11 @@ function App() {
               </button>
 
               <h3 className="text-lg font-bold mb-4 text-center sm:text-left">Add Product</h3>
-              <ProductForm loading={loading} onAdd={addProduct} onCancel={() => setShowFormModal(false)} />
+              <ProductForm
+                loading={loading}
+                onAdd={addProduct}
+                onCancel={() => setShowFormModal(false)}
+              />
             </div>
           </div>
         )}
