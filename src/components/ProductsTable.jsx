@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { AiFillCloseCircle } from "react-icons/ai";
 export default function ProductTable({ products = [], onDelete, onEdit }) {
   const [modalDescription, setModalDescription] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
@@ -229,9 +229,9 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
                             featuredImages: prev.featuredImages.filter((_, i) => i !== index),
                           }))
                         }
-                        className="absolute top-0 right-0 bg-black bg-opacity-60 text-white rounded-full h-5 w-5 text-xs flex items-center justify-center hover:bg-red-600"
+                        className="absolute top-0 right-0 "
                       >
-                        ×
+                        <AiFillCloseCircle className="text-[25px]" />
                       </button>
                     </div>
                   ))}
@@ -268,9 +268,9 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
                             galleryImages: prev.galleryImages.filter((_, index) => index !== i),
                           }))
                         }
-                        className="absolute top-0 right-0 bg-black bg-opacity-60 text-white rounded-full h-4 w-4 text-xs flex items-center justify-center hover:bg-red-600"
+                        className="absolute top-0 right-0 "
                       >
-                        ×
+                        <AiFillCloseCircle className="text-[25px]" />
                       </button>
                     </div>
                   ))}
