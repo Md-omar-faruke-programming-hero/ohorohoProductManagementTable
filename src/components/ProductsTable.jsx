@@ -87,7 +87,7 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
   return (
     <>
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border">
+        <table className="min-w-full bg-white border cursor-pointer">
           <thead>
             <tr className="bg-gray-100 text-sm">
               <th className="p-2 border">item</th>
