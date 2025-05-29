@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { AiFillCloseCircle } from "react-icons/ai";
+
 export default function ProductTable({ products = [], onDelete, onEdit }) {
   const [modalDescription, setModalDescription] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
   const [editData, setEditData] = useState({});
+  const [modalFeatureImage, setModalFeatureImage] = useState(null);
+  const [modalGalleryImage, setModalGalleryImage] = useState(null);
 
   const truncate = (str, n) => (str.length > n ? str.slice(0, n) + "..." : str);
 
@@ -27,6 +30,45 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
     return <p className="text-center text-gray-500 mt-4">No products available.</p>;
   }
 
+  const handleDownloadAll = async (img) => {
+    if (img == "galleryimage") {
+      for (const [index, imgUrl] of modalGalleryImage.entries()) {
+        console.log(imgUrl);
+        try {
+          const response = await fetch(imgUrl);
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `image-${index + 1}.jpg`; // You can customize filename
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+        } catch (err) {
+          console.error("Failed to download image:", imgUrl, err);
+        }
+      }
+    } else {
+      for (const [index, imgUrl] of modalFeatureImage.entries()) {
+        console.log(imgUrl);
+        try {
+          const response = await fetch(imgUrl);
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `image-${index + 1}.jpg`; // You can customize filename
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+        } catch (err) {
+          console.error("Failed to download image:", imgUrl, err);
+        }
+      }
+    }
+  };
   return (
     <>
       <div className="overflow-x-auto">
@@ -103,6 +145,7 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
                         image.map((url, i) =>
                           typeof url === "string" ? (
                             <img
+                              onClick={() => setModalFeatureImage(image)}
                               key={i}
                               src={url}
                               alt={`image ${i}`}
@@ -121,6 +164,7 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
                         gallery.map((url, i) =>
                           typeof url === "string" ? (
                             <img
+                              onClick={() => setModalGalleryImage(gallery)}
                               key={i}
                               src={url}
                               alt={`gallery ${i}`}
@@ -172,6 +216,128 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
             >
               Close
             </button>
+          </div>
+        </div>
+      )}
+      {/* carrousel feature image Modal */}
+      {modalFeatureImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          onClick={() => setModalFeatureImage(null)}
+        >
+          <div
+            className="relative bg-white w-full max-w-sm sm:max-w-lg md:max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-lg shadow-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div>
+              <div className="carousel w-full max-w-screen-lg mx-auto">
+                {modalFeatureImage.map((img, index) => {
+                  const prevIndex =
+                    (index - 1 + modalFeatureImage.length) % modalFeatureImage.length;
+                  const nextIndex = (index + 1) % modalFeatureImage.length;
+
+                  return (
+                    <div key={index} id={`slide${index}`} className="carousel-item relative w-full">
+                      <img
+                        src={img}
+                        alt={`Slide ${index}`}
+                        className="w-full h-auto sm:h-72 md:h-96 lg:h-[500px] xl:h-[600px] object-cover rounded"
+                      />
+                      <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                        <a
+                          href={`#slide${prevIndex}`}
+                          className="btn btn-circle bg-black bg-opacity-40 text-white hover:bg-opacity-70"
+                        >
+                          ❮
+                        </a>
+                        <a
+                          href={`#slide${nextIndex}`}
+                          className="btn btn-circle bg-black bg-opacity-40 text-white hover:bg-opacity-70"
+                        >
+                          ❯
+                        </a>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="mt-4 flex justify-end space-x-4">
+              <button
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                onClick={handleDownloadAll}
+              >
+                Download All
+              </button>
+              <button
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                onClick={() => setModalFeatureImage(null)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* carrousel Gallery image Modal */}
+      {modalGalleryImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          onClick={() => setModalGalleryImage(null)}
+        >
+          <div
+            className="relative bg-white w-full max-w-sm sm:max-w-lg md:max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-lg shadow-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div>
+              <div className="carousel w-full max-w-screen-lg mx-auto">
+                {modalGalleryImage.map((img, index) => {
+                  const prevIndex =
+                    (index - 1 + modalGalleryImage.length) % modalGalleryImage.length;
+                  const nextIndex = (index + 1) % modalGalleryImage.length;
+
+                  return (
+                    <div key={index} id={`slide${index}`} className="carousel-item relative w-full">
+                      <img
+                        src={img}
+                        alt={`Slide ${index}`}
+                        className="w-full h-auto sm:h-72 md:h-96 lg:h-[500px] xl:h-[600px] object-cover rounded"
+                      />
+                      <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                        <a
+                          href={`#slide${prevIndex}`}
+                          className="btn btn-circle bg-black bg-opacity-40 text-white hover:bg-opacity-70"
+                        >
+                          ❮
+                        </a>
+                        <a
+                          href={`#slide${nextIndex}`}
+                          className="btn btn-circle bg-black bg-opacity-40 text-white hover:bg-opacity-70"
+                        >
+                          ❯
+                        </a>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="mt-4 flex justify-end space-x-4">
+              <button
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                onClick={() => handleDownloadAll("galleryimage")}
+              >
+                Download All
+              </button>
+              <button
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                onClick={() => setModalGalleryImage(null)}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
