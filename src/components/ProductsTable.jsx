@@ -161,7 +161,7 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
           onClick={() => setModalDescription(null)}
         >
           <div
-            className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4"
+            className="relative bg-white w-full max-w-sm sm:max-w-lg md:max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-lg shadow-lg"
             onClick={(e) => e.stopPropagation()}
           >
             <h3 className="text-lg font-bold mb-4">Full Description</h3>
@@ -178,195 +178,199 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
 
       {/* Edit Modal */}
       {editIndex !== null && (
-  <div
-    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-2"
-    onClick={() => setEditIndex(null)}
-  >
-    <div
-      className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <h3 className="text-lg sm:text-xl font-bold mb-4">Edit Product</h3>
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-2"
+          onClick={() => setEditIndex(null)}
+        >
+          <div
+            className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-lg sm:text-xl font-bold mb-4">Edit Product</h3>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {[
-          { label: "Product Name", name: "productName" },
-          { label: "Category", name: "category" },
-          { label: "Description", name: "description" },
-          { label: "Variant / Model", name: "variantOrModel" },
-          { label: "Wholesale Price", name: "wholeSellPrice" },
-          { label: "Sell Price", name: "sellPrice" },
-        ].map(({ label, name }) => (
-          <div key={name}>
-            <label className="block text-sm text-gray-600 mb-1">{label}</label>
-            <input
-              type="text"
-              name={name}
-              value={editData[name] || ""}
-              onChange={handleInputChange}
-              className="w-full p-2 border rounded text-sm"
-            />
-          </div>
-        ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[
+                { label: "Product Name", name: "productName" },
+                { label: "Category", name: "category" },
+                { label: "Description", name: "description" },
+                { label: "Variant / Model", name: "variantOrModel" },
+                { label: "Wholesale Price", name: "wholeSellPrice" },
+                { label: "Sell Price", name: "sellPrice" },
+              ].map(({ label, name }) => (
+                <div key={name}>
+                  <label className="block text-sm text-gray-600 mb-1">{label}</label>
+                  <input
+                    type="text"
+                    name={name}
+                    value={editData[name] || ""}
+                    onChange={handleInputChange}
+                    className="w-full p-2 border rounded text-sm"
+                  />
+                </div>
+              ))}
 
-        {/* Feature Image */}
-        <div>
-          <label className="block text-sm text-gray-600 mb-1">Feature Image</label>
-          {editData.featuredImages?.[0] && (
-            <img
-              src={editData.featuredImages[0]}
-              alt="Preview"
-              className="h-16 w-16 object-cover rounded mb-2"
-            />
-          )}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) =>
-              setEditData((prev) => ({
-                ...prev,
-                featuredImages: [URL.createObjectURL(e.target.files[0])],
-              }))
-            }
-            className="block w-full text-sm border rounded p-2"
-          />
-        </div>
-
-        {/* Gallery Images */}
-        <div>
-          <label className="block text-sm text-gray-600 mb-1">Gallery Images</label>
-          <div className="flex flex-wrap gap-1 mb-2">
-            {editData.galleryImages?.map((img, i) => (
-              <img key={i} src={img} alt="gallery" className="h-12 w-12 object-cover rounded" />
-            ))}
-          </div>
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={(e) =>
-              setEditData((prev) => ({
-                ...prev,
-                galleryImages: Array.from(e.target.files).map((file) =>
-                  URL.createObjectURL(file)
-                ),
-              }))
-            }
-            className="block w-full text-sm border rounded p-2"
-          />
-        </div>
-
-        {/* Stock Status */}
-        <div className="col-span-1 sm:col-span-2">
-          <label className="block text-sm text-gray-600 mb-1">Stock Status</label>
-          <div className="flex flex-wrap gap-4">
-            {["in", "out"].map((val) => (
-              <label key={val} className="flex items-center gap-2">
+              {/* Feature Image */}
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">Feature Image</label>
+                {editData.featuredImages?.[0] && (
+                  <img
+                    src={editData.featuredImages[0]}
+                    alt="Preview"
+                    className="h-16 w-16 object-cover rounded mb-2"
+                  />
+                )}
                 <input
-                  type="radio"
-                  name="stockStatus"
-                  value={val}
-                  checked={editData.stockStatus === val}
-                  onChange={handleInputChange}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) =>
+                    setEditData((prev) => ({
+                      ...prev,
+                      featuredImages: [URL.createObjectURL(e.target.files[0])],
+                    }))
+                  }
+                  className="block w-full text-sm border rounded p-2"
                 />
-                {val === "in" ? "Stock In" : "Stock Out"}
-              </label>
-            ))}
-          </div>
-        </div>
+              </div>
 
-        {/* Sizes */}
-        <div className="col-span-1 sm:col-span-2">
-          <label className="block text-sm text-gray-600 mb-1">Sizes</label>
-          {Array.isArray(editData.sizes) &&
-            editData.sizes.map((size, idx) => (
-              <div key={idx} className="flex flex-col sm:flex-row gap-2 mb-2">
+              {/* Gallery Images */}
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">Gallery Images</label>
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {editData.galleryImages?.map((img, i) => (
+                    <img
+                      key={i}
+                      src={img}
+                      alt="gallery"
+                      className="h-12 w-12 object-cover rounded"
+                    />
+                  ))}
+                </div>
                 <input
-                  type="text"
-                  placeholder="Size Type"
-                  value={size.sizeType}
-                  onChange={(e) => {
-                    const updatedSizes = [...editData.sizes];
-                    updatedSizes[idx].sizeType = e.target.value;
-                    setEditData({ ...editData, sizes: updatedSizes });
-                  }}
-                  className="flex-1 p-2 border rounded text-sm"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) =>
+                    setEditData((prev) => ({
+                      ...prev,
+                      galleryImages: Array.from(e.target.files).map((file) =>
+                        URL.createObjectURL(file)
+                      ),
+                    }))
+                  }
+                  className="block w-full text-sm border rounded p-2"
                 />
-                <input
-                  type="text"
-                  placeholder="Custom Size"
-                  value={size.customSize}
-                  onChange={(e) => {
-                    const updatedSizes = [...editData.sizes];
-                    updatedSizes[idx].customSize = e.target.value;
-                    setEditData({ ...editData, sizes: updatedSizes });
-                  }}
-                  className="flex-1 p-2 border rounded text-sm"
-                />
+              </div>
+
+              {/* Stock Status */}
+              <div className="col-span-1 sm:col-span-2">
+                <label className="block text-sm text-gray-600 mb-1">Stock Status</label>
+                <div className="flex flex-wrap gap-4">
+                  {["in", "out"].map((val) => (
+                    <label key={val} className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="stockStatus"
+                        value={val}
+                        checked={editData.stockStatus === val}
+                        onChange={handleInputChange}
+                      />
+                      {val === "in" ? "Stock In" : "Stock Out"}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Sizes */}
+              <div className="col-span-1 sm:col-span-2">
+                <label className="block text-sm text-gray-600 mb-1">Sizes</label>
+                {Array.isArray(editData.sizes) &&
+                  editData.sizes.map((size, idx) => (
+                    <div key={idx} className="flex flex-col sm:flex-row gap-2 mb-2">
+                      <input
+                        type="text"
+                        placeholder="Size Type"
+                        value={size.sizeType}
+                        onChange={(e) => {
+                          const updatedSizes = [...editData.sizes];
+                          updatedSizes[idx].sizeType = e.target.value;
+                          setEditData({ ...editData, sizes: updatedSizes });
+                        }}
+                        className="flex-1 p-2 border rounded text-sm"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Custom Size"
+                        value={size.customSize}
+                        onChange={(e) => {
+                          const updatedSizes = [...editData.sizes];
+                          updatedSizes[idx].customSize = e.target.value;
+                          setEditData({ ...editData, sizes: updatedSizes });
+                        }}
+                        className="flex-1 p-2 border rounded text-sm"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updatedSizes = editData.sizes.filter((_, i) => i !== idx);
+                          setEditData({ ...editData, sizes: updatedSizes });
+                        }}
+                        className="px-2 bg-red-500 text-white rounded"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
                 <button
                   type="button"
-                  onClick={() => {
-                    const updatedSizes = editData.sizes.filter((_, i) => i !== idx);
-                    setEditData({ ...editData, sizes: updatedSizes });
-                  }}
-                  className="px-2 bg-red-500 text-white rounded"
+                  onClick={() =>
+                    setEditData({
+                      ...editData,
+                      sizes: [...(editData.sizes || []), { sizeType: "", customSize: "" }],
+                    })
+                  }
+                  className="mt-1 px-3 py-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200 text-sm"
                 >
-                  ×
+                  + Add Size
                 </button>
               </div>
-            ))}
-          <button
-            type="button"
-            onClick={() =>
-              setEditData({
-                ...editData,
-                sizes: [...(editData.sizes || []), { sizeType: "", customSize: "" }],
-              })
-            }
-            className="mt-1 px-3 py-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200 text-sm"
-          >
-            + Add Size
-          </button>
+
+              {/* Colors */}
+              <div className="col-span-1 sm:col-span-2">
+                <label className="block text-sm text-gray-600 mb-1">Colors (comma-separated)</label>
+                <input
+                  type="text"
+                  value={Array.isArray(editData.color) ? editData.color.join(", ") : ""}
+                  onChange={(e) =>
+                    setEditData({
+                      ...editData,
+                      color: e.target.value.split(",").map((c) => c.trim()),
+                    })
+                  }
+                  className="w-full p-2 border rounded text-sm"
+                />
+              </div>
+            </div>
+
+            {/* Footer Buttons */}
+            <div className="mt-5 flex flex-col sm:flex-row justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setEditIndex(null)}
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm w-full sm:w-auto"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSave}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm w-full sm:w-auto"
+              >
+                Save
+              </button>
+            </div>
+          </div>
         </div>
-
-        {/* Colors */}
-        <div className="col-span-1 sm:col-span-2">
-          <label className="block text-sm text-gray-600 mb-1">Colors (comma-separated)</label>
-          <input
-            type="text"
-            value={Array.isArray(editData.color) ? editData.color.join(", ") : ""}
-            onChange={(e) =>
-              setEditData({
-                ...editData,
-                color: e.target.value.split(",").map((c) => c.trim()),
-              })
-            }
-            className="w-full p-2 border rounded text-sm"
-          />
-        </div>
-      </div>
-
-      {/* Footer Buttons */}
-      <div className="mt-5 flex flex-col sm:flex-row justify-end gap-2">
-        <button
-          type="button"
-          onClick={() => setEditIndex(null)}
-          className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm w-full sm:w-auto"
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          onClick={handleSave}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm w-full sm:w-auto"
-        >
-          Save
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
+      )}
     </>
   );
 }
