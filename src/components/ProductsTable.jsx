@@ -210,39 +210,69 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
               ))}
 
               {/* Feature Image */}
-              <div>
-                <label className="block text-sm text-gray-600 mb-1">Feature Image</label>
-                {editData.featuredImages?.[0] && (
-                  <img
-                    src={editData.featuredImages[0]}
-                    alt="Preview"
-                    className="h-16 w-16 object-cover rounded mb-2"
-                  />
-                )}
+              <div className="md:col-span-2">
+                <label className="block text-sm text-gray-600 mb-1">Featured Images</label>
+
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {editData.featuredImages?.map((img, index) => (
+                    <div key={index} className="relative h-16 w-16">
+                      <img
+                        src={img}
+                        alt={`Featured ${index}`}
+                        className="h-16 w-16 object-cover rounded"
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setEditData((prev) => ({
+                            ...prev,
+                            featuredImages: prev.featuredImages.filter((_, i) => i !== index),
+                          }))
+                        }
+                        className="absolute top-0 right-0 bg-black bg-opacity-60 text-white rounded-full h-5 w-5 text-xs flex items-center justify-center hover:bg-red-600"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) =>
+                  multiple
+                  onChange={(e) => {
+                    const files = Array.from(e.target.files);
+                    const newImages = files.map((file) => URL.createObjectURL(file));
                     setEditData((prev) => ({
                       ...prev,
-                      featuredImages: [URL.createObjectURL(e.target.files[0])],
-                    }))
-                  }
+                      featuredImages: [...(prev.featuredImages || []), ...newImages],
+                    }));
+                  }}
                   className="block w-full text-sm border rounded p-2"
                 />
               </div>
 
               {/* Gallery Images */}
-              <div>
+              <div className="md:col-span-2">
                 <label className="block text-sm text-gray-600 mb-1">Gallery Images</label>
                 <div className="flex flex-wrap gap-1 mb-2">
                   {editData.galleryImages?.map((img, i) => (
-                    <img
-                      key={i}
-                      src={img}
-                      alt="gallery"
-                      className="h-12 w-12 object-cover rounded"
-                    />
+                    <div key={i} className="relative h-12 w-12">
+                      <img src={img} alt="gallery" className="h-12 w-12 object-cover rounded" />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setEditData((prev) => ({
+                            ...prev,
+                            galleryImages: prev.galleryImages.filter((_, index) => index !== i),
+                          }))
+                        }
+                        className="absolute top-0 right-0 bg-black bg-opacity-60 text-white rounded-full h-4 w-4 text-xs flex items-center justify-center hover:bg-red-600"
+                      >
+                        ×
+                      </button>
+                    </div>
                   ))}
                 </div>
                 <input
