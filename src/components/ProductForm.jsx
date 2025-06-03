@@ -1,6 +1,8 @@
 import { useState, useRef } from "react";
 import { uploadToImageBB } from "../utils/imageBBUploader";
-export default function ProductForm({ onAdd, loading }) {
+export default function ProductForm({ products = [], onAdd, loading }) {
+  console.log(products);
+  const [isModelBooked, setIsModelBooked] = useState(false);
   const [product, setProduct] = useState({
     productName: "",
     category: "",
@@ -31,6 +33,14 @@ export default function ProductForm({ onAdd, loading }) {
       setProduct({ ...product, galleryImages: Array.from(files) });
     } else {
       setProduct({ ...product, [name]: value });
+    }
+
+    // Check for model booking if field is "variantOrModel"
+    if (name === "variantOrModel") {
+      const codeExists = products.some(
+        (item) => item.variantOrModel.trim().toLowerCase() === value.trim().toLowerCase()
+      );
+      setIsModelBooked(codeExists);
     }
   };
 
@@ -149,6 +159,9 @@ export default function ProductForm({ onAdd, loading }) {
             value={product.variantOrModel}
             className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
+          {isModelBooked && (
+            <p className="text-red-500 text-sm mt-1">This model code is already booked.</p>
+          )}
         </div>
 
         {/* Size */}
@@ -305,7 +318,7 @@ export default function ProductForm({ onAdd, loading }) {
           >
             <option value="in">In Stock</option>
             <option value="out">Out of Stock</option>
-            <option value="preorder">Preorder</option>
+            <option value="up">Upcoming</option>
           </select>
         </div>
       </div>

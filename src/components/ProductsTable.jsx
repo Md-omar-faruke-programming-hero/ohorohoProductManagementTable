@@ -213,10 +213,15 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
                     {sellPrice}৳
                   </td>
                   <td className="p-2 border text-center">
-                    {p.stockStatus === "in" ? (
-                      <span className="text-green-600 font-semibold">Stock In</span>
-                    ) : (
-                      <span className="text-red-600 font-semibold">Stock Out</span>
+                    {p.stockStatus === "in" && (
+                      <span className="text-green-600 font-semibold">In Stock</span>
+                    )}
+                    {p.stockStatus === "out" && (
+                      <span className="text-gray-500 font-semibold">Out of Stock</span>
+                    )}
+
+                    {p.stockStatus === "up" && (
+                      <span className="text-orange-500 font-semibold">Upcoming</span>
                     )}
                   </td>
                   <td className="p-2 border">

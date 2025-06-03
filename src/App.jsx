@@ -217,6 +217,7 @@ function App() {
                 loading={loading}
                 onAdd={addProduct}
                 onCancel={() => setShowFormModal(false)}
+                products={filteredProducts}
               />
             </div>
           </div>
