@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { toast } from "react-toastify";
+import { uploadToImageBB } from "../utils/imageBBUploader";
 
 export default function ProductTable({ products = [], onDelete, onEdit }) {
   const [modalDescription, setModalDescription] = useState(null);
@@ -472,10 +473,9 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
                 </div>
               ))}
 
-              {/* Feature Image */}
+              {/* Featured Images */}
               <div className="md:col-span-2">
                 <label className="block text-sm text-gray-600 mb-1">Featured Images</label>
-
                 <div className="flex flex-wrap gap-2 mb-2">
                   {editData.featuredImages?.map((img, index) => (
                     <div key={index} className="relative h-16 w-16">
@@ -492,24 +492,25 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
                             featuredImages: prev.featuredImages.filter((_, i) => i !== index),
                           }))
                         }
-                        className="absolute top-0 right-0 "
+                        className="absolute top-0 right-0"
                       >
                         <AiFillCloseCircle className="text-[25px]" />
                       </button>
                     </div>
                   ))}
                 </div>
-
                 <input
                   type="file"
                   accept="image/*"
                   multiple
-                  onChange={(e) => {
+                  onChange={async (e) => {
                     const files = Array.from(e.target.files);
-                    const newImages = files.map((file) => URL.createObjectURL(file));
+                    const uploadedUrls = await Promise.all(
+                      files.map((file) => uploadToImageBB(file))
+                    );
                     setEditData((prev) => ({
                       ...prev,
-                      featuredImages: [...(prev.featuredImages || []), ...newImages],
+                      featuredImages: [...(prev.featuredImages || []), ...uploadedUrls],
                     }));
                   }}
                   className="block w-full text-sm border rounded p-2"
@@ -531,7 +532,7 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
                             galleryImages: prev.galleryImages.filter((_, index) => index !== i),
                           }))
                         }
-                        className="absolute top-0 right-0 "
+                        className="absolute top-0 right-0"
                       >
                         <AiFillCloseCircle className="text-[25px]" />
                       </button>
@@ -542,14 +543,16 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
                   type="file"
                   accept="image/*"
                   multiple
-                  onChange={(e) =>
+                  onChange={async (e) => {
+                    const files = Array.from(e.target.files);
+                    const uploadedUrls = await Promise.all(
+                      files.map((file) => uploadToImageBB(file))
+                    );
                     setEditData((prev) => ({
                       ...prev,
-                      galleryImages: Array.from(e.target.files).map((file) =>
-                        URL.createObjectURL(file)
-                      ),
-                    }))
-                  }
+                      galleryImages: [...(prev.galleryImages || []), ...uploadedUrls],
+                    }));
+                  }}
                   className="block w-full text-sm border rounded p-2"
                 />
               </div>
@@ -557,7 +560,7 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
               {/* Stock Status */}
               <div className="col-span-1 sm:col-span-2">
                 <label className="block text-sm text-gray-600 mb-1">Stock Status</label>
-                <div className="flex flex-wrap gap-4">
+                <div className="flex gap-4">
                   {["in", "out"].map((val) => (
                     <label key={val} className="flex items-center gap-2">
                       <input
@@ -576,43 +579,44 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
               {/* Sizes */}
               <div className="col-span-1 sm:col-span-2">
                 <label className="block text-sm text-gray-600 mb-1">Sizes</label>
-                {Array.isArray(editData.sizes) &&
-                  editData.sizes.map((size, idx) => (
-                    <div key={idx} className="flex flex-col sm:flex-row gap-2 mb-2">
-                      <input
-                        type="text"
-                        placeholder="Size Type"
-                        value={size.sizeType}
-                        onChange={(e) => {
-                          const updatedSizes = [...editData.sizes];
-                          updatedSizes[idx].sizeType = e.target.value;
-                          setEditData({ ...editData, sizes: updatedSizes });
-                        }}
-                        className="flex-1 p-2 border rounded text-sm"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Custom Size"
-                        value={size.customSize}
-                        onChange={(e) => {
-                          const updatedSizes = [...editData.sizes];
-                          updatedSizes[idx].customSize = e.target.value;
-                          setEditData({ ...editData, sizes: updatedSizes });
-                        }}
-                        className="flex-1 p-2 border rounded text-sm"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const updatedSizes = editData.sizes.filter((_, i) => i !== idx);
-                          setEditData({ ...editData, sizes: updatedSizes });
-                        }}
-                        className="px-2 bg-red-500 text-white rounded"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
+                {(editData.sizes || []).map((size, idx) => (
+                  <div key={idx} className="flex flex-col sm:flex-row gap-2 mb-2">
+                    <input
+                      type="text"
+                      placeholder="Size Type"
+                      value={size.sizeType}
+                      onChange={(e) => {
+                        const updated = [...editData.sizes];
+                        updated[idx].sizeType = e.target.value;
+                        setEditData({ ...editData, sizes: updated });
+                      }}
+                      className="flex-1 p-2 border rounded text-sm"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Custom Size"
+                      value={size.customSize}
+                      onChange={(e) => {
+                        const updated = [...editData.sizes];
+                        updated[idx].customSize = e.target.value;
+                        setEditData({ ...editData, sizes: updated });
+                      }}
+                      className="flex-1 p-2 border rounded text-sm"
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setEditData({
+                          ...editData,
+                          sizes: editData.sizes.filter((_, i) => i !== idx),
+                        })
+                      }
+                      className="px-2 bg-red-500 text-white rounded"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
                 <button
                   type="button"
                   onClick={() =>

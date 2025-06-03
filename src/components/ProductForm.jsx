@@ -21,44 +21,52 @@ export default function ProductForm({ products = [], onAdd, loading }) {
     sizeType: "",
     customSize: "",
   });
+
+  const [featuredPreviews, setFeaturedPreviews] = useState([]);
+  const [galleryPreviews, setGalleryPreviews] = useState([]);
   // Refs for file inputs
   const featuredInputRef = useRef(null);
   const galleryInputRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === "featuredImages") {
-      setProduct({ ...product, featuredImages: Array.from(files) });
-    } else if (name === "galleryImages") {
-      setProduct({ ...product, galleryImages: Array.from(files) });
-    } else {
-      setProduct({ ...product, [name]: value });
-    }
 
-    // Check for model booking if field is "variantOrModel"
-    if (name === "variantOrModel") {
-      const codeExists = products.some(
-        (item) => item.variantOrModel.trim().toLowerCase() === value.trim().toLowerCase()
-      );
-      setIsModelBooked(codeExists);
+    if (name === "featuredImages") {
+      const filesArray = Array.from(files);
+      setProduct((prev) => ({ ...prev, featuredImages: filesArray }));
+      setFeaturedPreviews(filesArray.map((file) => URL.createObjectURL(file)));
+    } else if (name === "galleryImages") {
+      const filesArray = Array.from(files);
+      setProduct((prev) => ({ ...prev, galleryImages: filesArray }));
+      setGalleryPreviews(filesArray.map((file) => URL.createObjectURL(file)));
+    } else {
+      setProduct((prev) => ({ ...prev, [name]: value }));
+
+      // For checking if the model code exists
+      if (name === "variantOrModel") {
+        const codeExists = products.some(
+          (item) => item.variantOrModel.trim().toLowerCase() === value.trim().toLowerCase()
+        );
+        setIsModelBooked(codeExists);
+      }
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Upload images
       const featuredImageUrls = await Promise.all(
         product.featuredImages.map((file) => uploadToImageBB(file))
       );
-      const galleryUrls = await Promise.all(
+
+      const galleryImageUrls = await Promise.all(
         product.galleryImages.map((file) => uploadToImageBB(file))
       );
 
       const finalProduct = {
         ...product,
         featuredImages: featuredImageUrls,
-        galleryImages: galleryUrls,
+        galleryImages: galleryImageUrls,
         size: `${product.sizeType} - ${product.customSize}`,
       };
 
@@ -70,9 +78,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
         category: "",
         description: "",
         variantOrModel: "",
-
         sizes: [],
-
         color: [],
         wholeSellPrice: "",
         sellPrice: "",
@@ -80,6 +86,9 @@ export default function ProductForm({ products = [], onAdd, loading }) {
         galleryImages: [],
         stockStatus: "in",
       });
+
+      setFeaturedPreviews([]);
+      setGalleryPreviews([]);
 
       if (featuredInputRef.current) featuredInputRef.current.value = null;
       if (galleryInputRef.current) galleryInputRef.current.value = null;
@@ -352,11 +361,11 @@ export default function ProductForm({ products = [], onAdd, loading }) {
         )}
         {product.featuredImages.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-3">
-            {product.featuredImages.map((file, idx) => (
+            {featuredPreviews.map((src, index) => (
               <img
-                key={idx}
-                src={URL.createObjectURL(file)}
-                alt={`Featured Preview ${idx + 1}`}
+                key={index}
+                src={src}
+                alt={`Featured Preview ${index + 1}`}
                 className="h-32 w-32 object-cover rounded border"
               />
             ))}
@@ -393,11 +402,11 @@ export default function ProductForm({ products = [], onAdd, loading }) {
         )}
         {product.galleryImages.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-3">
-            {product.galleryImages.map((file, idx) => (
+            {galleryPreviews.map((src, index) => (
               <img
-                key={idx}
-                src={URL.createObjectURL(file)}
-                alt={`Gallery Preview ${idx + 1}`}
+                key={index}
+                src={src}
+                alt={`Gallery Preview ${index + 1}`}
                 className="h-24 w-24 object-cover rounded border"
               />
             ))}
