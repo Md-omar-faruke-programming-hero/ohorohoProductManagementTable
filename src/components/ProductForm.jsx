@@ -287,7 +287,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
             Wholesale Price
           </label>
           <input
-            type="number"
+            type="text"
             id="wholeSellPrice"
             name="wholeSellPrice"
             placeholder="Wholesale Price"
@@ -304,7 +304,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
           </label>
           <input
             id="sellPrice"
-            type="number"
+            type="text"
             name="sellPrice"
             placeholder="Sell Price"
             onChange={handleChange}
