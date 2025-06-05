@@ -115,6 +115,8 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
               const model = p?.variantOrModel || "—";
               const size = p?.sizes || [];
               const color = p?.color || [];
+              const colortype = p?.colorType || [];
+              const colorfinish = p?.colorfinish || [];
               const wholesalePrice = p?.wholeSellPrice || "—";
               const sellPrice = p?.sellPrice || "—";
               const image = p?.featuredImages || [];
@@ -190,7 +192,15 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
                       });
                     }}
                   >
-                    {Array.isArray(color) ? color.join(", ") : color || "—"}
+                    {Array.isArray(color) && color.length > 0 ? color.join(", ") : color || "—"}
+                    {(Array.isArray(colortype) && colortype.length > 0) ||
+                    (Array.isArray(colorfinish) && colorfinish.length > 0) ? (
+                      <>
+                        {" "}
+                        ({[...(colortype || []), ...(colorfinish || [])].filter(Boolean).join(", ")}
+                        )
+                      </>
+                    ) : null}
                   </td>
 
                   <td

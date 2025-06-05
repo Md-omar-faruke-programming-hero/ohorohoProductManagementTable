@@ -10,6 +10,8 @@ export default function ProductForm({ products = [], onAdd, loading }) {
     variantOrModel: "",
     sizes: [],
     color: [],
+    colorType: [],
+    colorfinish: [],
     wholeSellPrice: "",
     sellPrice: "",
     featuredImages: [],
@@ -17,6 +19,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
     stockStatus: "in",
   });
   const [customColor, setCustomColor] = useState("");
+
   const [currentSize, setCurrentSize] = useState({
     sizeType: "",
     customSize: "",
@@ -85,6 +88,8 @@ export default function ProductForm({ products = [], onAdd, loading }) {
         featuredImages: [],
         galleryImages: [],
         stockStatus: "in",
+        colorType: [],
+        colorfinish: [],
       });
 
       setFeaturedPreviews([]);
@@ -183,6 +188,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
             className="w-full border border-gray-300 rounded-md p-2 mb-2"
           >
             <option value="">-- Choose Size --</option>
+            <option value="স্ট্যান্ডার্ড">স্ট্যান্ডার্ড</option>
             <option value="বড়">বড়</option>
             <option value="মাঝারি">মাঝারি</option>
             <option value="ছোট">ছোট</option>
@@ -224,11 +230,11 @@ export default function ProductForm({ products = [], onAdd, loading }) {
         {/* Color */}
 
         <div className="md:col-span-2">
-          <label className="block text-gray-700 font-medium mb-1">রঙ নির্বাচন করুন</label>
+          <label className="block text-black font-medium mb-1 underline">রঙ নির্বাচন করুন</label>
 
           {/* Predefined Color Options as Checkboxes */}
-          <div className="flex flex-wrap gap-2 mb-3">
-            {["লাল", "নীল", "সবুজ", "কালো", "সাদা"].map((colorOption) => (
+          <div className="flex flex-wrap gap-2 ">
+            {["সোনালী", "কালো", "সাদা"].map((colorOption) => (
               <label key={colorOption} className="flex items-center space-x-2">
                 <input
                   type="checkbox"
@@ -250,7 +256,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
           </div>
 
           {/* Optional Custom Color Input */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mb-[15px]">
             <input
               type="text"
               placeholder="কাস্টম রঙ লিখুন (যেমনঃ সোনালী)"
@@ -275,9 +281,78 @@ export default function ProductForm({ products = [], onAdd, loading }) {
             </button>
           </div>
 
+          <div className="mb-[20px]">
+            <label className="block text-black font-medium mb-1 underline">
+              রঙ টাইপ নির্বাচন করুন
+            </label>
+
+            {/* Predefined Color Options as Checkboxes */}
+            <div className="flex flex-wrap gap-2 mb-3">
+              {[
+                "নিকেল",
+                "স্প্রে পেইন্ট",
+                "হ্যান্ড পেইন্ট",
+                "ব্রাশ এন্টিক হ্যান্ড পেইন্ট",
+                "পাউডার হিট কোডিং",
+                "পি ভি সি প্লাস্টিক কোডিং",
+              ].map((colorOption) => (
+                <label key={colorOption} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    value={colorOption}
+                    checked={product.colorType?.includes(colorOption)}
+                    onChange={(e) => {
+                      const { checked, value } = e.target;
+                      setProduct((prev) => {
+                        const updatedColors = checked
+                          ? [...(prev.colorType || []), value]
+                          : prev.colorType.filter((c) => c !== value);
+                        return { ...prev, colorType: updatedColors };
+                      });
+                    }}
+                  />
+                  <span>{colorOption}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div className="mb-[20px]">
+            <label className="block text-black font-medium mb-1 underline">
+              রঙ ফিনিশ নির্বাচন করুন
+            </label>
+
+            {/* Predefined Color Options as Checkboxes */}
+            <div className="flex flex-wrap gap-2 mb-3">
+              {["গ্লোসি ", "ম্যাট", "গ্লোসি ম্যাট"].map((colorOption) => (
+                <label key={colorOption} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    value={colorOption}
+                    checked={product.colorfinish?.includes(colorOption)}
+                    onChange={(e) => {
+                      const { checked, value } = e.target;
+                      setProduct((prev) => {
+                        const updatedColors = checked
+                          ? [...(prev.colorfinish || []), value]
+                          : prev.colorfinish.filter((c) => c !== value);
+                        return { ...prev, colorfinish: updatedColors };
+                      });
+                    }}
+                  />
+                  <span>{colorOption}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
           {/* Display Selected Colors */}
-          <div className="mt-2 text-sm text-black">
-            নির্বাচিত রঙ: {product.color?.join(", ") || "কোনো রঙ নির্বাচন করা হয়নি"}
+
+          <div className="mt-2 text-sm font-extrabold text-black">
+            নির্বাচিত রঙ :{" "}
+            {product.color.length > 0 ? product.color.join(", ") : "কোনো রঙ নির্বাচন করা হয়নি"}
+            {product.colorType.length > 0 || product.colorfinish.length > 0 ? (
+              <> ({[...product.colorType, ...product.colorfinish].filter(Boolean).join(", ")})</>
+            ) : null}
           </div>
         </div>
 
