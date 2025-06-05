@@ -117,7 +117,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
             placeholder="Product Name"
             onChange={handleChange}
             value={product.productName}
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-black"
             required
           />
         </div>
@@ -133,7 +133,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
             placeholder="Category"
             onChange={handleChange}
             value={product.category}
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-black"
             required
           />
         </div>
@@ -150,7 +150,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
             onChange={handleChange}
             value={product.description}
             rows={3}
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-black"
             required
           ></textarea>
         </div>
@@ -166,7 +166,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
             placeholder="ভ্যারিয়েন্ট/মডেল"
             onChange={handleChange}
             value={product.variantOrModel}
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-black"
           />
           {isModelBooked && (
             <p className="text-red-500 text-sm mt-1">This model code is already booked.</p>
@@ -193,7 +193,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
             placeholder='উদাহরণ: ১৬" x ৫" x ৭"'
             value={currentSize.customSize}
             onChange={(e) => setCurrentSize((prev) => ({ ...prev, customSize: e.target.value }))}
-            className="w-full border border-gray-300 rounded-md p-2 mb-2"
+            className="w-full border border-gray-300 rounded-md p-2 mb-2 placeholder-black"
           />
 
           <button
@@ -254,7 +254,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
             <input
               type="text"
               placeholder="কাস্টম রঙ লিখুন (যেমনঃ সোনালী)"
-              className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-black"
               value={customColor || ""}
               onChange={(e) => setCustomColor(e.target.value)}
             />
@@ -276,7 +276,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
           </div>
 
           {/* Display Selected Colors */}
-          <div className="mt-2 text-sm text-gray-600">
+          <div className="mt-2 text-sm text-black">
             নির্বাচিত রঙ: {product.color?.join(", ") || "কোনো রঙ নির্বাচন করা হয়নি"}
           </div>
         </div>
@@ -293,7 +293,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
             placeholder="Wholesale Price"
             onChange={handleChange}
             value={product.wholeSellPrice}
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none placeholder-black"
           />
         </div>
 
@@ -309,7 +309,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
             placeholder="Sell Price"
             onChange={handleChange}
             value={product.sellPrice}
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none placeholder-black"
           />
         </div>
 
