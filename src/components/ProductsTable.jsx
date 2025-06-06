@@ -472,7 +472,7 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
                 { label: "Sell Price", name: "sellPrice" },
               ].map(({ label, name }) => (
                 <div key={name}>
-                  <label className="block text-sm text-gray-600 mb-1">{label}</label>
+                  <label className="block text-sm text-black mb-1">{label}</label>
                   <input
                     type="text"
                     name={name}
@@ -485,7 +485,7 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
 
               {/* Featured Images */}
               <div className="md:col-span-2">
-                <label className="block text-sm text-gray-600 mb-1">Featured Images</label>
+                <label className="block text-sm text-black mb-1">Featured Images</label>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {editData.featuredImages?.map((img, index) => (
                     <div key={index} className="relative h-16 w-16">
@@ -529,7 +529,7 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
 
               {/* Gallery Images */}
               <div className="md:col-span-2">
-                <label className="block text-sm text-gray-600 mb-1">Gallery Images</label>
+                <label className="block text-sm text-black mb-1">Gallery Images</label>
                 <div className="flex flex-wrap gap-1 mb-2">
                   {editData.galleryImages?.map((img, i) => (
                     <div key={i} className="relative h-12 w-12">
@@ -569,7 +569,7 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
 
               {/* Stock Status */}
               <div className="col-span-1 sm:col-span-2">
-                <label className="block text-sm text-gray-600 mb-1">Stock Status</label>
+                <label className="block text-sm text-black mb-1">Stock Status</label>
                 <div className="flex gap-4">
                   {["in", "out"].map((val) => (
                     <label key={val} className="flex items-center gap-2">
@@ -588,7 +588,7 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
 
               {/* Sizes */}
               <div className="col-span-1 sm:col-span-2">
-                <label className="block text-sm text-gray-600 mb-1">Sizes</label>
+                <label className="block text-sm text-black mb-1">Sizes</label>
                 {(editData.sizes || []).map((size, idx) => (
                   <div key={idx} className="flex flex-col sm:flex-row gap-2 mb-2">
                     <input
@@ -643,7 +643,7 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
 
               {/* Colors */}
               <div className="col-span-1 sm:col-span-2">
-                <label className="block text-sm text-gray-600 mb-1">Colors (comma-separated)</label>
+                <label className="block text-sm text-black mb-1">Colors (comma-separated)</label>
                 <input
                   type="text"
                   value={Array.isArray(editData.color) ? editData.color.join(", ") : ""}
@@ -651,6 +651,38 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
                     setEditData({
                       ...editData,
                       color: e.target.value.split(",").map((c) => c.trim()),
+                    })
+                  }
+                  className="w-full p-2 border rounded text-sm"
+                />
+              </div>
+              <div className="col-span-1 sm:col-span-2">
+                <label className="block text-sm text-black mb-1">
+                  Colors Type (comma-separated)
+                </label>
+                <input
+                  type="text"
+                  value={Array.isArray(editData.colorType) ? editData.colorType.join(", ") : ""}
+                  onChange={(e) =>
+                    setEditData({
+                      ...editData,
+                      colorType: e.target.value.split(",").map((c) => c.trim()),
+                    })
+                  }
+                  className="w-full p-2 border rounded text-sm"
+                />
+              </div>
+              <div className="col-span-1 sm:col-span-2">
+                <label className="block text-sm text-black mb-1">
+                  Colors Finish Type(comma-separated)
+                </label>
+                <input
+                  type="text"
+                  value={Array.isArray(editData.colorfinish) ? editData.colorfinish.join(", ") : ""}
+                  onChange={(e) =>
+                    setEditData({
+                      ...editData,
+                      colorfinish: e.target.value.split(",").map((c) => c.trim()),
                     })
                   }
                   className="w-full p-2 border rounded text-sm"
