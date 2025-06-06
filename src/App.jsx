@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ProductForm from "./components/ProductForm";
 import ProductTable from "./components/ProductsTable";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -16,7 +16,7 @@ function App() {
   // Fetch products from backend
   const fetchProducts = async () => {
     try {
-      //setLoading(true);
+      setLoading(true);
       const res = await axios.get("https://productmanageserver.vercel.app/products");
       setProducts(res.data);
       // setError("");
@@ -24,7 +24,7 @@ function App() {
       console.error(err);
       //setError("Failed to fetch products");
     } finally {
-      // setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -224,8 +224,14 @@ function App() {
         )}
 
         {/* Table */}
+
         <div className="overflow-x-auto mt-6">
-          <ProductTable products={filteredProducts} onDelete={deleteProduct} onEdit={editProduct} />
+          <ProductTable
+            products={filteredProducts}
+            onDelete={deleteProduct}
+            onEdit={editProduct}
+            loading={loading}
+          />
         </div>
       </div>
     </>

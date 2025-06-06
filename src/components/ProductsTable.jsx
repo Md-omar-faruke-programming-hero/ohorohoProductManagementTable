@@ -3,7 +3,7 @@ import { AiFillCloseCircle } from "react-icons/ai";
 import { toast } from "react-toastify";
 import { uploadToImageBB } from "../utils/imageBBUploader";
 
-export default function ProductTable({ products = [], onDelete, onEdit }) {
+export default function ProductTable({ products = [], onDelete, onEdit, loading }) {
   const [modalDescription, setModalDescription] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
   const [editData, setEditData] = useState({});
@@ -29,6 +29,25 @@ export default function ProductTable({ products = [], onDelete, onEdit }) {
     setEditData({});
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-40">
+        <div className="relative w-14 h-14">
+          {/* Outer gradient ring */}
+          <div
+            className="absolute inset-0 rounded-full bg-gradient-to-tr from-indigo-500 via-pink-500 to-yellow-500 animate-spin 
+                    border-4 border-transparent shadow-xl shadow-pink-400/40"
+          ></div>
+
+          {/* Inner mask to create the hollow ring effect */}
+          <div className="absolute inset-[4px] bg-white dark:bg-gray-900 rounded-full"></div>
+
+          {/* Inner glow dot */}
+          <div className="absolute top-1 left-1 w-2.5 h-2.5 rounded-full bg-pink-400 shadow-md shadow-pink-400 animate-ping"></div>
+        </div>
+      </div>
+    );
+  }
   if (!products.length) {
     return <p className="text-center text-gray-500 mt-4">No products available.</p>;
   }
