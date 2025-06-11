@@ -55,7 +55,7 @@ export default function ProductTable({ products = [], onDelete, onEdit, loading 
   const handleDownloadAll = async (img) => {
     if (img == "galleryimage") {
       for (const [index, imgUrl] of modalGalleryImage.entries()) {
-        console.log(imgUrl);
+        
         try {
           const response = await fetch(imgUrl);
           const blob = await response.blob();
@@ -73,7 +73,7 @@ export default function ProductTable({ products = [], onDelete, onEdit, loading 
       }
     } else {
       for (const [index, imgUrl] of modalFeatureImage.entries()) {
-        console.log(imgUrl);
+       
         try {
           const response = await fetch(imgUrl);
           const blob = await response.blob();
