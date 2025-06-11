@@ -55,7 +55,6 @@ export default function ProductTable({ products = [], onDelete, onEdit, loading 
   const handleDownloadAll = async (img) => {
     if (img == "galleryimage") {
       for (const [index, imgUrl] of modalGalleryImage.entries()) {
-        
         try {
           const response = await fetch(imgUrl);
           const blob = await response.blob();
@@ -73,7 +72,6 @@ export default function ProductTable({ products = [], onDelete, onEdit, loading 
       }
     } else {
       for (const [index, imgUrl] of modalFeatureImage.entries()) {
-       
         try {
           const response = await fetch(imgUrl);
           const blob = await response.blob();
@@ -501,6 +499,24 @@ export default function ProductTable({ products = [], onDelete, onEdit, loading 
                   />
                 </div>
               ))}
+              {/* order quantity */}
+              <div className="md:col-span-2">
+                <label
+                  className="block text-gray-700 font-medium mb-1"
+                  htmlFor="MinimumOrderQuantity"
+                >
+                  Minimum Order Quantity
+                </label>
+                <input
+                  id="Minimum Order Quantity"
+                  type="number"
+                  name="minimumOrderQuantity"
+                  placeholder="Minimum Order Quantity"
+                  onChange={handleInputChange}
+                  value={editData.minimumOrderQuantity}
+                  className="w-full border  rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none placeholder-black"
+                />
+              </div>
 
               {/* Featured Images */}
               <div className="md:col-span-2">

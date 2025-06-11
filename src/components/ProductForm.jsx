@@ -16,6 +16,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
     sellPrice: "",
     featuredImages: [],
     galleryImages: [],
+    minimumOrderQuantity: "",
     stockStatus: "in",
   });
   const [customColor, setCustomColor] = useState("");
@@ -24,7 +25,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
     sizeType: "",
     customSize: "",
   });
-
+  console.log(product.minimumOrderQuantity);
   const [featuredPreviews, setFeaturedPreviews] = useState([]);
   const [galleryPreviews, setGalleryPreviews] = useState([]);
   // Refs for file inputs
@@ -357,7 +358,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
         </div>
 
         {/* Wholesale Price */}
-        <div>
+        <div className="md:col-span-2">
           <label className="block text-gray-700 font-medium mb-1" htmlFor="wholeSellPrice">
             Wholesale Price
           </label>
@@ -373,7 +374,7 @@ export default function ProductForm({ products = [], onAdd, loading }) {
         </div>
 
         {/* Sell Price */}
-        <div>
+        <div className="md:col-span-2">
           <label className="block text-gray-700 font-medium mb-1" htmlFor="sellPrice">
             Sell Price
           </label>
@@ -384,6 +385,22 @@ export default function ProductForm({ products = [], onAdd, loading }) {
             placeholder="Sell Price"
             onChange={handleChange}
             value={product.sellPrice}
+            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none placeholder-black"
+          />
+        </div>
+
+        {/* order quantity */}
+        <div className="md:col-span-2">
+          <label className="block text-gray-700 font-medium mb-1" htmlFor="MinimumOrderQuantity">
+            Minimum Order Quantity
+          </label>
+          <input
+            id="Minimum Order Quantity"
+            type="number"
+            name="minimumOrderQuantity"
+            placeholder="Minimum Order Quantity"
+            onChange={handleChange}
+            value={product.minimumOrderQuantity}
             className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none placeholder-black"
           />
         </div>
