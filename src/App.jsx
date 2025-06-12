@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import Swal from 'sweetalert2'
 import axios from "axios";
 import ProductForm from "./components/ProductForm";
 import ProductTable from "./components/ProductsTable";
@@ -51,15 +51,41 @@ function App() {
   };
   // delete product
   const deleteProduct = async (index) => {
-    const productToDelete = products[index];
-    console.log(productToDelete._id, "delete index");
-    try {
-      await axios.delete(`https://productmanageserver.vercel.app/products/${productToDelete._id}`);
-      setProducts(products.filter((_, i) => i !== index));
-    } catch (err) {
-      console.error("Error deleting product:", err);
-    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      // ✅ marked async here
+      if (result.isConfirmed) {
+        const productToDelete = products[index];
+        console.log(productToDelete._id, "delete index");
+        try {
+          await axios.delete(
+            `https://productmanageserver.vercel.app/products/${productToDelete._id}`
+          );
+          setProducts(products.filter((_, i) => i !== index));
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your file has been deleted.",
+            icon: "success",
+          });
+        } catch (err) {
+          console.error("Error deleting product:", err);
+          Swal.fire({
+            title: "Error!",
+            text: "There was a problem deleting the product.",
+            icon: "error",
+          });
+        }
+      }
+    });
   };
+
   // edit product
 
   const editProduct = async (index, updatedProduct) => {
